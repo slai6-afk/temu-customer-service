@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Temu Customer Service</title>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{
+  background:#1C1C1E;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif;
+}
+.phone{
+  width:390px;
+  height:844px;
+  background:#fff;
+  border-radius:52px;
+  overflow:hidden;
+  position:relative;
+  box-shadow:
+    0 0 0 1.5px #555,
+    0 0 0 9px #1a1a1a,
+    0 0 0 11px #4a4a4a;
+  flex-shrink:0;
+}
+.screen{
+  width:100%;height:100%;
+  overflow:hidden;
+  position:relative;
+}
+@keyframes slideInR{from{transform:translateX(100%)}to{transform:translateX(0)}}
+@keyframes slideInL{from{transform:translateX(-28%)}to{transform:translateX(0)}}
+@keyframes slideOutL{from{transform:translateX(0)}to{transform:translateX(-28%)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes d1{0%,60%,100%{opacity:.25}30%{opacity:1}}
+@keyframes d2{0%,60%,100%{opacity:.25}40%{opacity:1}}
+@keyframes d3{0%,60%,100%{opacity:.25}50%{opacity:1}}
+.td1{animation:d1 1.2s infinite}
+.td2{animation:d2 1.2s infinite}
+.td3{animation:d3 1.2s infinite}
+.fade-up{animation:fadeUp 0.22s ease forwards}
+.fade-in-sheet{animation:fadeInAlpha 0.16s ease forwards}
+.fade-out-sheet{animation:fadeOutAlpha 0.14s ease forwards}
+@keyframes fadeInAlpha{from{opacity:0}to{opacity:1}}
+@keyframes fadeOutAlpha{from{opacity:1}to{opacity:0}}
+::-webkit-scrollbar{width:0}
+input{-webkit-appearance:none;appearance:none;}
+</style>
+</head>
+<body>
+<script type="text/babel">
+const{useState,useEffect,useRef}=React;
+
+/* ─── PALETTE ─────────────────────────────────── */
+const TY={header:{fontSize:18,fontWeight:700,lineHeight:'1.25'},body:{fontSize:14,fontWeight:400,lineHeight:'1.45'},meta:{fontSize:12,fontWeight:400,lineHeight:'1.35'},btnTouch:{minHeight:44,minWidth:44,display:'inline-flex',alignItems:'center',justifyContent:'center'}};
+
+const P={
+  orange:'#FF6000',
+  orangeSoft:'#FFF3EA',
+  green:'#00A901',
+  greenBadge:'#00A901',
+  red:'#D32F2F',
+  bg:'#FFFFFF',
+  bgPage:'#F6F6F6',
+  border:'#E5E5E5',
+  borderMuted:'#EAEAEA',
+  text:'#111111',
+  textGray:'#888888',
+  textMeta:'#777777',
+  retBg:'#FFF1E9',
+  delBg:'#EAF9EF',
+  userBubble:'#F5ECD7',
+  agentCtaBg:'#F0F7FF',
+  agentCtaBorder:'#3B82F6',
+  white:'#FFFFFF',
+  statusDeliveredBg:'#EFEFEF',
+  statusDeliveredText:'#5C5C5C',
+  statusRefundedBg:'#EAF9EA',
+  statusRefundedText:'#00A901',
+  statusTransitBg:'#FFF3EA',
+  statusTransitText:'#FF6000',
+};
+
+/* ─── INLINE SVG ICONS ────────────────────────── */
+/* All icons inline — no external dependency, renders correctly in Figma captures */
+const _SVG={
+  /* ── Status bar — match iOS 17 reference exactly ── */
+  /* Cellular: 4 ascending rounded bars — from reference SVG */
+  'cellular':(c)=><svg viewBox="0 0 18 12" fill="none" style={{width:'100%',height:'100%'}}>
+    <path d="M2 8.30005C2.27879 8.30005 2.41826 8.29945 2.53418 8.32251C3.01021 8.4172 3.38187 8.78984 3.47656 9.26587C3.49961 9.38178 3.5 9.52129 3.5 9.80005V10.8C3.5 11.0787 3.49961 11.2183 3.47656 11.3342C3.38178 11.8101 3.01005 12.1819 2.53418 12.2766C2.41826 12.2997 2.27879 12.3 2 12.3C1.72121 12.3 1.58174 12.2997 1.46582 12.2766C0.98995 12.1819 0.618223 11.8101 0.523438 11.3342C0.500385 11.2183 0.5 11.0787 0.5 10.8V9.80005C0.5 9.52129 0.500388 9.38178 0.523438 9.26587C0.618125 8.78984 0.989792 8.4172 1.46582 8.32251C1.58174 8.29945 1.72121 8.30005 2 8.30005ZM6.7998 6.30005C7.07845 6.30005 7.2181 6.29949 7.33398 6.32251C7.81001 6.4172 8.18266 6.78984 8.27734 7.26587C8.30036 7.38175 8.2998 7.52141 8.2998 7.80005V10.8C8.2998 11.0787 8.3004 11.2183 8.27734 11.3342C8.1826 11.8102 7.80996 12.1819 7.33398 12.2766C7.21808 12.2997 7.07854 12.3 6.7998 12.3C6.52113 12.3 6.38152 12.2997 6.26562 12.2766C5.78983 12.1819 5.418 11.81 5.32324 11.3342C5.30019 11.2183 5.2998 11.0787 5.2998 10.8V7.80005C5.2998 7.52132 5.3002 7.38177 5.32324 7.26587C5.41792 6.7899 5.78968 6.41725 6.26562 6.32251C6.38152 6.29946 6.52113 6.30005 6.7998 6.30005ZM11.4004 4.00024C11.6789 4.00024 11.8187 3.99966 11.9346 4.02271C12.4104 4.11753 12.7823 4.49017 12.877 4.96606C12.8999 5.08192 12.9004 5.2217 12.9004 5.50024V10.8C12.9004 11.0787 12.9 11.2183 12.877 11.3342C12.7822 11.81 12.4103 12.1818 11.9346 12.2766C11.8187 12.2997 11.6789 12.3 11.4004 12.3C11.1218 12.3 10.9821 12.2996 10.8662 12.2766C10.3903 12.1819 10.0176 11.8102 9.92285 11.3342C9.8998 11.2183 9.90039 11.0787 9.90039 10.8V5.50024C9.90039 5.22173 9.89986 5.08192 9.92285 4.96606C10.0175 4.49004 10.3902 4.11739 10.8662 4.02271C10.9821 3.99972 11.1219 4.00024 11.4004 4.00024ZM16.0996 1.59985C16.3782 1.59985 16.5179 1.60028 16.6338 1.62329C17.1098 1.71798 17.4825 2.08966 17.5771 2.56567C17.6002 2.68159 17.5996 2.82106 17.5996 3.09985V10.8C17.5996 11.0787 17.6002 11.2183 17.5771 11.3342C17.4824 11.8102 17.1097 12.1819 16.6338 12.2766C16.5179 12.2996 16.3782 12.3 16.0996 12.3C15.8211 12.3 15.6813 12.2997 15.5654 12.2766C15.0897 12.1818 14.7178 11.81 14.623 11.3342C14.6 11.2183 14.5996 11.0787 14.5996 10.8V3.09985C14.5996 2.82106 14.6 2.68159 14.623 2.56567C14.7177 2.08985 15.0897 1.71814 15.5654 1.62329C15.6813 1.60024 15.8211 1.59985 16.0996 1.59985Z" fill={c}/>
+  </svg>,
+  /* WiFi: fan shape — from reference SVG */
+  'wifi':(c)=><svg viewBox="22 0 16 14" fill="none" style={{width:'100%',height:'100%'}}>
+    <path fillRule="evenodd" clipRule="evenodd" d="M30.3004 3.69626C32.5348 3.69636 34.6838 4.55491 36.3032 6.09447C36.4251 6.21333 36.62 6.21183 36.7401 6.09111L37.9058 4.91469C37.9666 4.85346 38.0005 4.77053 38 4.68423C37.9995 4.59793 37.9646 4.5154 37.9031 4.45488C33.6528 0.381575 26.9474 0.381575 22.6971 4.45488C22.6355 4.51535 22.6006 4.59786 22.6 4.68416C22.5994 4.77046 22.6333 4.85342 22.6941 4.91469L23.8601 6.09111C23.9801 6.21201 24.1751 6.21351 24.297 6.09447C25.9166 4.55481 28.0658 3.69626 30.3004 3.69626ZM30.3004 7.52365C31.5281 7.52357 32.7119 7.97989 33.622 8.80393C33.745 8.92088 33.9389 8.91834 34.0589 8.79821L35.2232 7.6218C35.2845 7.56009 35.3186 7.47638 35.3177 7.38939C35.3168 7.30241 35.2811 7.21941 35.2185 7.15896C32.4474 4.58121 28.1558 4.58121 25.3847 7.15896C25.3221 7.21941 25.2864 7.30245 25.2856 7.38946C25.2847 7.47648 25.3189 7.56018 25.3803 7.6218L26.5443 8.79821C26.6643 8.91834 26.8582 8.92088 26.9813 8.80393C27.8907 7.98043 29.0736 7.52416 30.3004 7.52365ZM32.538 10.3313C32.6002 10.2701 32.6345 10.186 32.6327 10.0988C32.631 10.0116 32.5933 9.92895 32.5286 9.87043C31.2423 8.78253 29.3585 8.78253 28.0723 9.87043C28.0075 9.9289 27.9698 10.0115 27.9679 10.0987C27.9661 10.186 28.0003 10.2701 28.0625 10.3313L30.0769 12.3638C30.1359 12.4235 30.2164 12.4571 30.3004 12.4571C30.3844 12.4571 30.4649 12.4235 30.5239 12.3638L32.538 10.3313Z" fill={c}/>
+  </svg>,
+  /* Battery: outline + fill + cap — from reference SVG */
+  'battery-full':(c)=><svg viewBox="43 0 25 14" fill="none" style={{width:'100%',height:'100%'}}>
+    <path d="M61.4102 1.15991C62.6582 1.15991 63.1111 1.28995 63.5674 1.53394C64.0237 1.77797 64.3819 2.13623 64.626 2.59253C64.87 3.04878 65 3.50176 65 4.74976V9.07007C65 10.3181 64.87 10.771 64.626 11.2273C64.3819 11.6836 64.0237 12.0419 63.5674 12.2859C63.1111 12.5299 62.6582 12.6599 61.4102 12.6599H46.5898C45.3418 12.6599 44.8889 12.5299 44.4326 12.2859C43.9763 12.0419 43.6181 11.6836 43.374 11.2273C43.13 10.771 43 10.3181 43 9.07007V4.74976C43 3.50176 43.13 3.04878 43.374 2.59253C43.6181 2.13623 43.9763 1.77797 44.4326 1.53394C44.8889 1.28995 45.3418 1.15991 46.5898 1.15991H61.4102ZM46.5898 2.15991C45.603 2.15991 45.2581 2.22659 44.9043 2.41577C44.6223 2.5666 44.4067 2.78218 44.2559 3.06421C44.0667 3.41803 44 3.76296 44 4.74976V9.07007C44 10.0569 44.0667 10.4018 44.2559 10.7556C44.4067 11.0376 44.6223 11.2532 44.9043 11.4041C45.2581 11.5932 45.603 11.6599 46.5898 11.6599H61.4102C62.397 11.6599 62.7419 11.5932 63.0957 11.4041C63.3777 11.2532 63.5933 11.0376 63.7441 10.7556C63.9333 10.4018 64 10.0569 64 9.07007V4.74976C64 3.76296 63.9333 3.41803 63.7441 3.06421C63.5933 2.78218 63.3777 2.5666 63.0957 2.41577C62.7419 2.22659 62.397 2.15991 61.4102 2.15991H46.5898ZM66 4.85034C66.0184 4.85977 67.5 5.62146 67.5 6.85034C67.4997 8.08666 66 8.85034 66 8.85034V4.85034Z" fill={c} fillOpacity="0.36"/>
+    <rect x="45" y="3.07666" width="18" height="7.66667" rx="1.6" fill={c}/>
+  </svg>,
+  'chevron-back-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><path d="M15 18L9 12L15 6" stroke={c} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  'chevron-forward':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><path d="M9 18L15 12L9 6" stroke={c} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  'chevron-forward-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><path d="M9 18L15 12L9 6" stroke={c} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  'search-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><circle cx="11" cy="11" r="7" stroke={c} strokeWidth="2.2"/><path d="M16.5 16.5L21.5 21.5" stroke={c} strokeWidth="2.2" strokeLinecap="round"/></svg>,
+  'shield-checkmark-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><path d="M12 2L3 7V12C3 16.4 6.9 20.5 12 22C17.1 20.5 21 16.4 21 12V7L12 2Z" stroke={c} strokeWidth="2" strokeLinejoin="round"/><path d="M9 12L11 14L15 10" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  'arrow-undo-circle-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><circle cx="12" cy="12" r="9.5" stroke={c} strokeWidth="2"/><path d="M10 8.5H14.5C16.2 8.5 17.5 9.8 17.5 11.5C17.5 13.2 16.2 14.5 14.5 14.5H9" stroke={c} strokeWidth="2" strokeLinecap="round"/><path d="M10.5 11.5L8 9L10.5 6.5" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  'cube-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><path d="M12 2L21 7V17L12 22L3 17V7L12 2Z" stroke={c} strokeWidth="2" strokeLinejoin="round"/><path d="M12 22V12" stroke={c} strokeWidth="2"/><path d="M21 7L12 12L3 7" stroke={c} strokeWidth="2" strokeLinejoin="round"/></svg>,
+  'help-circle-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><circle cx="12" cy="12" r="9.5" stroke={c} strokeWidth="2"/><path d="M9.5 9.5C9.5 8.1 10.6 7 12 7C13.4 7 14.5 8.1 14.5 9.5C14.5 10.5 13.8 11.5 12.8 12C12.3 12.2 12 12.7 12 13.2V14" stroke={c} strokeWidth="2" strokeLinecap="round"/><circle cx="12" cy="16.5" r="1" fill={c}/></svg>,
+  'star-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><path d="M12 2L14.9 9.1L22.6 9.7L17 14.7L18.8 22.3L12 18.4L5.2 22.3L7 14.7L1.4 9.7L9.1 9.1L12 2Z" stroke={c} strokeWidth="2" strokeLinejoin="round"/></svg>,
+  'close-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><path d="M18 6L6 18M6 6L18 18" stroke={c} strokeWidth="2.2" strokeLinecap="round"/></svg>,
+  'add-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><path d="M12 5V19M5 12H19" stroke={c} strokeWidth="2.5" strokeLinecap="round"/></svg>,
+  'add-circle-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><circle cx="12" cy="12" r="9.5" stroke={c} strokeWidth="2"/><path d="M12 8V16M8 12H16" stroke={c} strokeWidth="2" strokeLinecap="round"/></svg>,
+  'paper-plane-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><path d="M22 2L11 13" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M22 2L15 22L11 13L2 9L22 2Z" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  'checkmark-sharp':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><path d="M4 12L10 18L20 6" stroke={c} strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  'checkmark-done-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><path d="M2 12L8 18L19 6" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M8 12L14 18L22 7" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  'sparkles-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z" stroke={c} strokeWidth="1.8" strokeLinejoin="round"/><path d="M19 15L19.9 17.1L22 18L19.9 18.9L19 21L18.1 18.9L16 18L18.1 17.1L19 15Z" stroke={c} strokeWidth="1.6" strokeLinejoin="round"/></svg>,
+  'clipboard-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><rect x="4" y="4" width="16" height="18" rx="2" stroke={c} strokeWidth="2"/><path d="M9 4V3C9 2.4 9.4 2 10 2H14C14.6 2 15 2.4 15 3V4" stroke={c} strokeWidth="2" strokeLinecap="round"/><path d="M9 10H15M9 14H15M9 18H12" stroke={c} strokeWidth="1.8" strokeLinecap="round"/></svg>,
+  'swap-vertical-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><path d="M7 4V20M7 20L3 16M7 20L11 16" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M17 20V4M17 4L13 8M17 4L21 8" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  'chevron-expand-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><path d="M8 9L12 5L16 9" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M8 15L12 19L16 15" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  'reader-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><rect x="3" y="2" width="18" height="20" rx="2" stroke={c} strokeWidth="2"/><path d="M8 7H16M8 11H16M8 15H12" stroke={c} strokeWidth="1.8" strokeLinecap="round"/></svg>,
+  'happy-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><circle cx="12" cy="12" r="9.5" stroke={c} strokeWidth="2"/><path d="M8.5 14.5C9.2 16.1 10.5 17 12 17C13.5 17 14.8 16.1 15.5 14.5" stroke={c} strokeWidth="2" strokeLinecap="round"/><circle cx="9" cy="10" r="1.2" fill={c}/><circle cx="15" cy="10" r="1.2" fill={c}/></svg>,
+  'receipt-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><path d="M4 2H20V22L17 20L14 22L12 20L10 22L7 20L4 22V2Z" stroke={c} strokeWidth="2" strokeLinejoin="round"/><path d="M8 8H16M8 12H16M8 16H12" stroke={c} strokeWidth="1.8" strokeLinecap="round"/></svg>,
+  'cart-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><path d="M1 1H5L7.7 14.4C7.9 15.3 8.7 16 9.6 16H19.4C20.3 16 21.1 15.3 21.3 14.4L23 6H6" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="9" cy="20" r="1.5" stroke={c} strokeWidth="1.8"/><circle cx="20" cy="20" r="1.5" stroke={c} strokeWidth="1.8"/></svg>,
+  'camera-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><path d="M23 19C23 20.1 22.1 21 21 21H3C1.9 21 1 20.1 1 19V8C1 6.9 1.9 6 3 6H7L9 3H15L17 6H21C22.1 6 23 6.9 23 8V19Z" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="12" cy="13" r="4" stroke={c} strokeWidth="2"/></svg>,
+  'images-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><rect x="3" y="5" width="18" height="16" rx="2" stroke={c} strokeWidth="2"/><path d="M3 16L7 12L11 16L15 11L21 17" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="8" cy="10" r="1.5" fill={c}/><path d="M7 2H17" stroke={c} strokeWidth="2" strokeLinecap="round"/></svg>,
+  'folder-open-outline':(c)=><svg viewBox="0 0 24 24" fill="none" style={{width:'100%',height:'100%'}}><path d="M3 7C3 5.9 3.9 5 5 5H10L12 7H19C20.1 7 21 7.9 21 9V10" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M3 9H21L18.5 19H5.5L3 9Z" stroke={c} strokeWidth="2" strokeLinejoin="round"/></svg>,
+};
+
+function IOSIcon({name,color='#111111',size=22,style={}}){
+  const px=typeof size==='number'?size:parseFloat(size)||22;
+  const fn=_SVG[name];
+  return(
+    <span style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:px,height:px,flexShrink:0,pointerEvents:'none',...style}}>
+      {fn?fn(color):null}
+    </span>
+  );
+}
+
+/* ─── STATUS BAR ──────────────────────────────── */
+/* ─── STATUS BAR ──────────────────────────────── */
+function StatusBar({showTemu=false}){
+  return(
+    <div style={{height:52,display:'flex',alignItems:'flex-end',justifyContent:'space-between',padding:'0 24px 10px',position:'relative',zIndex:10,background:'#fff'}}>
+      <span style={{fontSize:17,fontWeight:600,letterSpacing:'-0.3px',color:'#000',fontVariantNumeric:'tabular-nums'}}>9:41</span>
+      {showTemu&&(
+        <div style={{position:'absolute',left:'50%',transform:'translateX(-50%)',bottom:9}}>
+          <span style={{fontSize:17,fontWeight:900,background:'linear-gradient(135deg,#FF8C00,#FF5500)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',letterSpacing:'2.5px'}}>TEMU</span>
+        </div>
+      )}
+      <div style={{display:'flex',alignItems:'center',gap:6,paddingBottom:1}}>
+        <IOSIcon name="cellular"     color="#000" size={17}/>
+        <IOSIcon name="wifi"         color="#000" size={17}/>
+        <IOSIcon name="battery-full" color="#000" size={25}/>
+      </div>
+    </div>
+  );
+}
+
+/* ─── BACK NAV ────────────────────────────────── */
+function NavBar({title,onBack,right}){
+  return(
+    <div style={{background:'#fff',borderBottom:'none',padding:'0 16px 10px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+      <button onClick={onBack} type="button" style={{...TY.btnTouch,background:'none',border:'none',cursor:'pointer',padding:'6px 10px 6px 0',marginLeft:-6,marginBottom:0}}>
+        <IOSIcon name="chevron-back-outline" color={P.text} size={26}/>
+      </button>
+      <span style={{...TY.header,color:P.text}}>{title}</span>
+      <div style={{width:40,display:'flex',justifyContent:'flex-end'}}>{right||null}</div>
+    </div>
+  );
+}
+
+/* ─── SEARCH BAR ──────────────────────────────── */
+function SearchBar({placeholder='Have any questions? Ask them here!',onFocus,value,onChange}){
+  const h=44;
+  return(
+    <div style={{
+      display:'flex',alignItems:'center',
+      border:`1px solid ${P.border}`,
+      borderRadius:22,
+      background:P.bgPage,
+      padding:'0 4px 0 14px',
+      height:h,
+      gap:8,
+    }}>
+      <span style={{...TY.body,color:P.textGray,flex:1}}>{value||placeholder}</span>
+      <button
+        type="button"
+        aria-label="Search"
+        onClick={onFocus}
+        style={{
+          ...TY.btnTouch,width:38,height:38,borderRadius:'50%',padding:0,marginBottom:3,
+          background:P.orange,
+          border:'none',cursor:'pointer',flexShrink:0,
+        }}
+      >
+        <IOSIcon name="search-outline" color="#fff" size={20}/>
+      </button>
+    </div>
+  );
+}
+
+/* ─── TEMU BOT AVATAR ─────────────────────────── */
+function TemuAvatar({size=38}){
+  return(
+    <div style={{width:size,height:size,borderRadius:'50%',background:P.orange,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+      <span style={{fontSize:size*.21,color:'#fff',fontWeight:700,lineHeight:1.05,letterSpacing:'-0.3px'}}>1h:jo</span>
+      <span style={{fontSize:size*.2,color:'#fff',fontWeight:900,lineHeight:1.05,letterSpacing:'0.6px'}}>TEMU</span>
+    </div>
+  );
+}
+
+/* ─── PRODUCT IMAGE ───────────────────────────── */
+/* Themed photos per SKU (main + 2 alternates for multi-thumb rows). Same-domain fallbacks only — no random placeholders. */
+const _IMGQ='?auto=format&w=480&h=480&fit=crop&q=85';
+const PRODUCT_IMGS={
+  noodles:[
+    `https://images.unsplash.com/photo-1569718212165-3a8278d5f624${_IMGQ}`,
+    `https://images.unsplash.com/photo-1612929633738-8fe44f7ec841${_IMGQ}`,
+    `https://images.unsplash.com/photo-1555126634-323283e090fa${_IMGQ}`,
+  ],
+  desk:[
+    `https://images.unsplash.com/photo-1524758631624-e2822e304c36${_IMGQ}`,
+    `https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd${_IMGQ}`,
+    `https://images.unsplash.com/photo-1502672260266-1c1ef2d93688${_IMGQ}`,
+  ],
+  socks:[
+    `https://images.unsplash.com/photo-1586350977771-b3b0abd50c82${_IMGQ}`,
+    `https://images.unsplash.com/photo-1586790170083-2f9ceadc732d${_IMGQ}`,
+    'https://images.pexels.com/photos/6311662/pexels-photo-6311662.jpeg?auto=compress&cs=tinysrgb&w=480&h=480&fit=crop',
+  ],
+  cushion:[
+    `https://images.unsplash.com/photo-1555041469-a586c61ea9bc${_IMGQ}`,
+    `https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e${_IMGQ}`,
+    `https://images.unsplash.com/photo-1567016376408-0226e4d0c1ea${_IMGQ}`,
+  ],
+};
+
+function ProductImg({src,size=72,radius=4}){
+  const chain=Array.isArray(src)?src.filter(Boolean):[src];
+  const[idx,setIdx]=useState(0);
+  const url=chain[idx];
+  const failed=!url||idx>=chain.length;
+  return failed?(
+    <div style={{width:size,height:size,background:'#F5F5F5',borderRadius:radius,display:'flex',alignItems:'center',justifyContent:'center',fontSize:28}}>📦</div>
+  ):(
+    <img
+      src={url}
+      onError={()=>setIdx(i=>i+1)}
+      style={{width:size,height:size,objectFit:'cover',borderRadius:radius,display:'block'}}
+      alt="product"
+    />
+  );
+}
+
+/* ─── ORDERS DATA ─────────────────────────────── */
+const ORDERS=[
+  {id:'#PO-211-00263399567991983',status:'Delivered',price:'$19.11',items:1,date:'Jan 31',seller:'99 Ranch Market',img:PRODUCT_IMGS.noodles,note:null,name:'Spicy Noodles Pack',recentlyViewed:false,recentlyDelivered:true},
+  {id:'#PO-211-00263315681911983',status:'Out for delivery',price:'$37.87',items:1,date:'Feb 02',seller:'COLE HOME',img:PRODUCT_IMGS.desk,note:'Delivered, PUDO. For Delivery Issues & Tracking Support, Contact GOFO at +1 949 688-6032 or cs@mail.gofoexpress.com',name:'63 Inch Electric Stand Desk',recentlyViewed:true,recentlyDelivered:false},
+  {id:'#PO-211-19834945879671983',status:'Delivered',price:'$6.82',items:1,date:'Oct 25',seller:'Fashion Store',img:PRODUCT_IMGS.socks,note:'Delivered, Door/Yard. For Delivery Issues & Tracking Support, Contact GOFO at +1 949 688-6032 or cs@mail.gofoexpress.com',name:'Compression Knee Socks',recentlyViewed:false,recentlyDelivered:false},
+  {id:'#PO-211-00263315681912001',status:'Delivered',price:'$0.41',items:1,date:'Oct 12',seller:'COLE HOME',img:PRODUCT_IMGS.cushion,note:null,name:'Cushion Cover Set',recentlyViewed:false,recentlyDelivered:false},
+];
+
+function orderStatusStyles(status){
+  const s=(status||'').toLowerCase();
+  const transit=s.includes('out for')||s.includes('shipping')||s.includes('transit');
+  if(transit) return{bg:P.statusTransitBg,color:P.statusTransitText,fontWeight:700};
+  if(s.includes('refund')) return{bg:P.statusRefundedBg,color:P.statusRefundedText,fontWeight:700};
+  return{bg:P.statusDeliveredBg,color:P.statusDeliveredText,fontWeight:700};
+}
+
+/* ─── ISSUES ──────────────────────────────────── */
+const ISSUES=[
+  'Some item(s) are missing from my package',
+  'Some item(s) are defective/damaged',
+  'Inaccurate website description',
+  'The merchant sent the wrong item',
+  'Item arrived too late',
+  "The logistics shows that it has been delivered, but I haven't received the package.",
+  'No longer needed',
+];
+
+const LATE_POLICY=`If you do not receive your order by the estimated delivery date, you will be eligible for late delivery compensation credits.
+Please note: Compensation credits are typically issued within 48 hours after the estimated delivery time. This compensation will not apply if logistics delays are caused by personal reasons or if the conditions of the compensation policy are not met.
+You can press here to view our late delivery compensation policy: https://www.temu.com/late-delivery-compensation-policy.html`;
+
+/* ══════════════════════════════════════════════
+   SCREEN A — SUPPORT PAGE (orders list)
+══════════════════════════════════════════════ */
+function SupportPage({onOrderSelect,onSearchFocus,onContactUs,initialSheet}){
+  const[sheet,setSheet]=useState(()=>initialSheet||{open:false,flow:null});
+
+  return(
+    <div style={{width:'100%',height:'100%',display:'flex',flexDirection:'column',background:'#fff',overflow:'hidden',position:'relative'}}>
+      {/* Sticky header */}
+      <div style={{flexShrink:0,background:'#fff',zIndex:10,borderBottom:'1px solid #F0F0F0'}}>
+        <StatusBar/>
+        <NavBar title="Support" onBack={()=>{}}/>
+        <div style={{padding:'0 16px 8px'}} onClick={onSearchFocus}>
+          <SearchBar onFocus={onSearchFocus}/>
+        </div>
+      </div>
+      {/* Scrollable content */}
+      <div style={{flex:1,overflowY:'auto'}}>
+
+      {/* Green guarantee banner */}
+      <div style={{background:P.green,padding:'8px 12px',display:'flex',alignItems:'center',gap:8}}>
+        <IOSIcon name="shield-checkmark-outline" color="#fff" size={20}/>
+        <span style={{fontSize:13,color:'#fff',fontWeight:500,flex:1,overflow:'hidden',whiteSpace:'nowrap',textOverflow:'ellipsis'}}>Order Guarantee | Credit for delay</span>
+        <IOSIcon name="chevron-forward" color="#fff" size={16}/>
+      </div>
+
+      <div style={{padding:'12px 16px 0'}}>
+        {/* Heading */}
+        <p style={{textAlign:'center',...TY.header,color:P.text,marginBottom:14}}>Hi, how can we help you?</p>
+
+        {/* Category tiles */}
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:8}}>
+          {/* Return & Refund */}
+          <button type="button" onClick={()=>setSheet({open:true,flow:'return'})} style={{background:P.retBg,borderRadius:14,padding:'20px 12px 16px',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:8,cursor:'pointer',minHeight:168,border:`1px solid ${P.borderMuted}`}}>
+            <IOSIcon name="arrow-undo-circle-outline" color={P.orange} size={58}/>
+            <span style={{...TY.header,fontSize:16,color:P.text,textAlign:'center'}}>Return & Refund</span>
+            <span style={{...TY.meta,color:P.textGray,textAlign:'center',padding:'0 2px'}}>I want a refund</span>
+          </button>
+          {/* Delivery */}
+          <button type="button" onClick={()=>setSheet({open:true,flow:'delivery'})} style={{background:P.delBg,borderRadius:14,padding:'20px 12px 16px',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:8,cursor:'pointer',minHeight:168,border:`1px solid ${P.borderMuted}`}}>
+            <IOSIcon name="cube-outline" color={P.greenBadge} size={58}/>
+            <span style={{...TY.header,fontSize:16,color:P.text,textAlign:'center'}}>Delivery</span>
+            <span style={{...TY.meta,color:P.textGray,textAlign:'center',padding:'0 2px'}}>Track my package</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Whitespace divider between actions and orders */}
+      <div style={{height:20,background:P.bg,margin:'4px 0 0'}}/>
+      <div style={{padding:'18px 16px 12px'}}>
+        {/* Instruction — body emphasis without shouting */}
+        <p style={{...TY.body,color:P.text,marginBottom:0,lineHeight:'1.5'}}>
+          <strong style={{fontWeight:700}}>Select an order</strong>{' '}to get help with items, shipping, return or refund problems, etc.
+        </p>
+      </div>
+
+      {/* Order cards */}
+      <div style={{padding:'0 16px 4px',display:'flex',flexDirection:'column',gap:11}}>
+        {ORDERS.slice(0,2).map(order=>(
+          <OrderCard key={order.id} order={order} onSelect={()=>onOrderSelect(order)}/>
+        ))}
+      </div>
+
+      {/* Contact us CTA */}
+      <div style={{padding:'22px 16px 36px',display:'flex',flexDirection:'column',alignItems:'center',gap:12}}>
+        <p style={{...TY.body,color:P.text,textAlign:'center'}}>Still can&apos;t solve the problem?</p>
+        <button type="button" onClick={onContactUs} style={{
+          display:'flex',alignItems:'center',justifyContent:'center',gap:8,
+          ...TY.btnTouch,minHeight:48,padding:'0 52px',
+          border:`1px solid ${P.border}`,
+          borderRadius:24,
+          background:'#fff',cursor:'pointer',...TY.body,color:P.text,
+          position:'relative',fontWeight:500,
+        }}>
+          <IOSIcon name="help-circle-outline" color={P.text} size={22}/>
+          Contact us
+          <div style={{position:'absolute',right:6,top:-6,width:20,height:20,borderRadius:'50%',background:P.orange,display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:700,color:'#fff'}}>1</div>
+        </button>
+      </div>
+      </div>{/* end scrollable */}
+
+      {sheet.open&&(
+        <OrderPickerSheet
+          flow={sheet.flow}
+          onClose={()=>setSheet({open:false,flow:null})}
+          onSelect={order=>{
+            setSheet({open:false,flow:null});
+            onOrderSelect(order);
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+function OrderCard({order,onSelect}){
+  const st=orderStatusStyles(order.status);
+  return(
+    <div role="button" tabIndex={0} onClick={onSelect} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();if(onSelect)onSelect();}}} style={{border:`1px solid ${P.border}`,borderRadius:12,background:'#fff',overflow:'hidden',cursor:'pointer'}}>
+      <div style={{padding:'12px 12px 12px'}}>
+        <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:10,marginBottom:10}}>
+          <div style={{background:st.bg,color:st.color,padding:'5px 10px',borderRadius:6,display:'inline-flex',alignItems:'center',gap:6}}>
+            <span style={{...TY.meta,fontSize:11.5,fontWeight:st.fontWeight,color:st.color,letterSpacing:'0.02em'}}>{order.status}</span>
+          </div>
+          <span style={{...TY.meta,color:P.textGray,textAlign:'right',whiteSpace:'nowrap'}}>
+            {order.items}&nbsp;item · {order.price}<br/><span>{order.date}</span>
+          </span>
+        </div>
+
+        <div style={{display:'flex',gap:12}}>
+          <ProductImg src={order.img} size={72}/>
+          <div style={{flex:1,minWidth:0}}>
+            <p style={{...TY.body,fontWeight:600,color:P.text,lineHeight:'1.35',marginBottom:4,display:'-webkit-box',WebkitLineClamp:2,WebkitBoxOrient:'vertical',overflow:'hidden'}}>{order.name}</p>
+            <p style={{...TY.meta,color:P.textGray,marginBottom:2,lineHeight:'1.35'}}>{order.id}</p>
+            <p style={{...TY.meta,color:P.textGray,lineHeight:'1.35'}}>Sold by<span style={{fontWeight:600,color:P.textGray}}> {order.seller}</span></p>
+          </div>
+        </div>
+
+        {order.recentlyDelivered&&(
+          <button type="button" onClick={e=>{e.stopPropagation();onSelect&&onSelect();}} style={{
+            marginTop:12,width:'100%',
+            ...TY.btnTouch,minHeight:44,
+            border:`1px solid ${P.orange}`,borderRadius:10,
+            background:P.white,...TY.body,fontWeight:600,color:P.orange,
+          }}>Problem with this order?</button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════
+   SCREEN B — SEARCH / FAQ PAGE
+══════════════════════════════════════════════ */
+const FAQS=[
+  'What should I do if I am missing item(s) from my order?',
+  'Why can\'t I find my order in my account?',
+  'How do I track my refund?',
+  'How do I change the notification settings?',
+  'What if I received an item damaged or not as described?',
+  'Protect Yourself from Spam Text Messages and Phishing Scams',
+  'Is it safe to shop on Temu? How will my information be used?',
+];
+
+function SearchPage({onBack,onOrderSelect}){
+  const[activeTab,setActiveTab]=useState('recommended');
+  const inputRef=useRef();
+  useEffect(()=>{if(inputRef.current)inputRef.current.focus();},[]);
+
+  return(
+    <div style={{width:'100%',height:'100%',display:'flex',flexDirection:'column',background:'#fff',overflow:'hidden'}}>
+      {/* Sticky header */}
+      <div style={{flexShrink:0,background:'#fff',zIndex:10}}>
+        <StatusBar/>
+        <NavBar title="Support" onBack={onBack}/>
+        <div style={{padding:'0 16px 10px'}}>
+          <div style={{display:'flex',alignItems:'center',border:`1px solid ${P.border}`,borderRadius:22,background:P.bgPage,padding:'0 4px 0 14px',height:44,gap:8}}>
+            <input ref={inputRef} placeholder="Have any questions? Ask them here!" style={{flex:1,border:'none',background:'transparent',...TY.body,color:P.text,outline:'none'}}/>
+            <button type="button" aria-label="Search" style={{...TY.btnTouch,width:36,height:36,borderRadius:'50%',marginBottom:2,background:P.orange,border:'none',cursor:'pointer',flexShrink:0}}>
+              <IOSIcon name="search-outline" color="#fff" size={18}/>
+            </button>
+          </div>
+        </div>
+      </div>
+      {/* Tabs */}
+      <div style={{display:'flex',alignItems:'center',borderBottom:`1px solid ${P.border}`,padding:'0 16px',gap:0,flexShrink:0}}>
+        <button
+          type="button"
+          onClick={()=>setActiveTab('recommended')}
+          style={{
+            background:'none',border:'none',cursor:'pointer',
+            padding:'10px 0',marginRight:20,
+            display:'flex',alignItems:'center',gap:5,
+            borderBottom:activeTab==='recommended'?'2.5px solid #111':'2.5px solid transparent',
+            marginBottom:-1,
+          }}
+        >
+          <IOSIcon name="sparkles-outline" color="#111" size={17}/>
+          <span style={{fontSize:14,fontWeight:activeTab==='recommended'?700:400,color:'#111'}}>Recommended topics</span>
+        </button>
+        <button
+          type="button"
+          onClick={()=>setActiveTab('order')}
+          style={{
+            background:'none',border:'none',cursor:'pointer',
+            padding:'10px 0',marginRight:12,
+            display:'flex',alignItems:'center',gap:5,
+            borderBottom:activeTab==='order'?'2.5px solid #111':'2.5px solid transparent',
+            marginBottom:-1,
+          }}
+        >
+          <IOSIcon name="clipboard-outline" color="#888" size={17}/>
+          <span style={{fontSize:14,color:'#888',fontWeight:400}}>Order issues</span>
+        </button>
+        <div style={{marginLeft:'auto',display:'flex',alignItems:'center',gap:2}}>
+          <IOSIcon name="swap-vertical-outline" color="#888" size={22}/>
+          <IOSIcon name="chevron-expand-outline" color="#888" size={14}/>
+        </div>
+      </div>
+
+      {/* FAQ list */}
+      <div style={{flex:1,overflowY:'auto'}}>
+        {FAQS.map((q,i)=>(
+          <button type="button" key={i} style={{
+            width:'100%',background:'none',border:'none',cursor:'pointer',
+            borderBottom:`1px solid ${P.border}`,
+            padding:'14px 16px',
+            textAlign:'left',
+            ...TY.body,color:P.text,
+          }}>
+            {q}
+          </button>
+        ))}
+
+        {/* Divider section */}
+        <div style={{height:8,background:'#F5F5F5',borderTop:`1px solid ${P.border}`,borderBottom:`1px solid ${P.border}`}}/>
+
+        {/* Support records */}
+        <button type="button" style={{
+          width:'100%',background:'none',border:'none',cursor:'pointer',
+          borderBottom:`1px solid ${P.border}`,
+          padding:'15px 16px',
+          display:'flex',alignItems:'center',justifyContent:'space-between',
+        }}>
+          <div style={{display:'flex',alignItems:'center',gap:10}}>
+            <IOSIcon name="reader-outline" color="#111" size={22}/>
+            <span style={{fontSize:15,color:'#111'}}>Customer support records</span>
+          </div>
+          <IOSIcon name="chevron-forward-outline" color="#AAA" size={18}/>
+        </button>
+
+        {/* Request item */}
+        <button type="button" style={{
+          width:'100%',background:'none',border:'none',cursor:'pointer',
+          borderBottom:`1px solid ${P.border}`,
+          padding:'15px 16px',
+          display:'flex',alignItems:'center',justifyContent:'space-between',
+        }}>
+          <div style={{display:'flex',alignItems:'center',gap:10}}>
+            <IOSIcon name="add-circle-outline" color="#111" size={22}/>
+            <span style={{fontSize:15,color:'#111'}}>Request an item</span>
+          </div>
+          <IOSIcon name="chevron-forward-outline" color="#AAA" size={18}/>
+        </button>
+
+        {/* CTA */}
+        <div style={{padding:'24px 16px 32px',display:'flex',flexDirection:'column',alignItems:'center',gap:12}}>
+          <p style={{fontSize:16,fontWeight:600,color:'#111'}}>Still can't solve the problem?</p>
+          <button type="button" style={{
+            display:'flex',alignItems:'center',gap:8,
+            border:`1px solid ${P.border}`,
+            borderRadius:24,
+            background:'#fff',
+            padding:'12px 48px',
+            cursor:'pointer',
+            ...TY.body,
+            fontWeight:500,
+            color:'#111',
+            position:'relative',
+            ...TY.btnTouch,minHeight:48,
+          }}>
+            <IOSIcon name="help-circle-outline" color="#111" size={22}/>
+            Contact us
+            <div style={{
+              position:'absolute',right:-2,top:-8,
+              width:20,height:20,borderRadius:'50%',
+              background:P.orange,
+              display:'flex',alignItems:'center',justifyContent:'center',
+              fontSize:11,fontWeight:700,color:'#fff',
+            }}>1</div>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════
+   SCREEN C — CHAT PAGE (CUI)
+══════════════════════════════════════════════ */
+const LIVE_AGENT={name:'Christopher Brooks',initial:'C'};
+
+function ChatPage({order,onBack,exportUi}){
+  const[msgs,setMsgs]=useState([]);
+  const[typing,setTyping]=useState(false);
+  const[inputVal,setInputVal]=useState('');
+  const[phase,setPhase]=useState('greeting');
+  const[showPicker,setShowPicker]=useState(exportUi?.forcePicker??!order);
+  const[showPhotoPicker,setShowPhotoPicker]=useState(!!exportUi?.photoPicker);
+  const[showAttachSheet,setShowAttachSheet]=useState(!!exportUi?.attachSheet);
+  const[liveAgent,setLiveAgent]=useState(null);
+  const[agentSessionStarted,setAgentSessionStarted]=useState(false);
+  const scrollRef=useRef();
+  const inputRef=useRef();
+
+  const showPostOrderChips=msgs.some(m=>m.type==='chat_order')||(order&&!showPicker);
+
+  useEffect(()=>{
+    const init=[];
+    init.push({id:1,role:'system',type:'timestamp',text:'12:19 PM'});
+    init.push({id:2,role:'bot',type:'text',text:'Welcome to Temu Customer Service! By continuing, you acknowledge that your chat may be monitored and used as disclosed in our __Privacy Policy__ to improve the virtual assistant and enhance your experience. Thanks for contacting. I\'m Temu\'s virtual assistant, here to help!'});
+    init.push({id:3,role:'bot',type:'text',text:'Hi, slai6, what can I do for you today?'});
+    if(exportUi?.skipBootstrap){
+      if(order){
+        const ts=Date.now();
+        setMsgs([
+          ...init,
+          {id:ts,role:'system',type:'timestamp',text:'12:56 PM'},
+          {id:ts+1,role:'system',type:'chat_order',order},
+          {id:ts+2,role:'bot',type:'text',text:"Good afternoon! It's a pleasure to welcome you to Temu customer service center. How may I assist you today?"},
+        ]);
+      }else{
+        setMsgs(init);
+      }
+      return;
+    }
+    setMsgs(init);
+    if(order){
+      setTimeout(()=>runOrderFlow(order,init),800);
+    }
+  },[]);
+
+  function runOrderFlow(o,existingMsgs){
+    const ts=Date.now();
+    const newMsgs=[
+      {id:ts,role:'system',type:'timestamp',text:'12:56 PM'},
+      {id:ts+1,role:'system',type:'chat_order',order:o},
+    ];
+    setMsgs(p=>[...p,...newMsgs]);
+    setTimeout(()=>{
+      setTyping(true);
+      setTimeout(()=>{
+        setTyping(false);
+        setMsgs(p=>[...p,{id:Date.now(),role:'bot',type:'text',text:"Good afternoon! It's a pleasure to welcome you to Temu customer service center. How may I assist you today?"}]);
+        setTimeout(()=>{
+          setTyping(true);
+          setTimeout(()=>{
+            setTyping(false);
+            setMsgs(p=>[...p,
+              {id:Date.now(),role:'bot',type:'delivery_confirmation',order:o,
+                text:"Hello! We have confirmed that your order has been successfully delivered. May I ask if the product meets your expectations? If you are not satisfied or need to return the item, please let me know directly, and I will open a dedicated after-sales service channel for you and follow up throughout the process."},
+            ]);
+            setPhase('delivery');
+            setTimeout(()=>{
+              setMsgs(p=>[...p,{id:Date.now(),role:'system',type:'timestamp',text:'1:03 PM'}]);
+              setTyping(true);
+              setTimeout(()=>{
+                setTyping(false);
+                setMsgs(p=>[...p,{id:Date.now(),role:'bot',type:'followup_actions',
+                  text:"We hope you're still with us. If you have any other inquiries or require further assistance, we're more than happy to help. 🙂",
+                  buttons:['I have other questions','End chat'],
+                }]);
+                setPhase('followup');
+              },1200);
+            },2800);
+          },1400);
+        },400);
+      },1300);
+    },300);
+  }
+
+  useEffect(()=>{
+    if(scrollRef.current) scrollRef.current.scrollTop=scrollRef.current.scrollHeight;
+  },[msgs,typing]);
+
+  function addUser(text){setMsgs(p=>[...p,{id:Date.now(),role:'user',type:'text',text}]);}
+  function addBots(bots){const t=Date.now();setMsgs(p=>[...p,...bots.map((b,i)=>({...b,id:t+i,role:'bot'}))]);}
+  function showTyping(cb,delay=1300){setTyping(true);setTimeout(()=>{setTyping(false);cb();},delay);}
+
+  function handleIssue(issue){
+    if(issue==='Return/Refund'){
+      showTyping(()=>{
+        addBots([{type:'issue_list',text:'Could you tell us what issue you are facing? If it is not listed below, you can share it directly in the chatbox.',issues:ISSUES}]);
+        setPhase('issue_list');
+      });
+      return;
+    }
+    addUser(issue);
+    if(issue==='Item arrived too late'){
+      showTyping(()=>{
+        addBots([
+          {type:'text',text:LATE_POLICY},
+          {type:'issue_list',text:'Please select the button below that best describes your problem so that we can help you as effectively as possible.',issues:ISSUES},
+        ]);
+        setPhase('response');
+      });
+    } else if(issue==='Some item(s) are missing from my package'){
+      showTyping(()=>{
+        addBots([
+          {type:'text',text:"We're sorry to hear that! To help resolve this, we'll need to verify your order details.\n\nPlease note that missing item claims must be submitted within 30 days of delivery. Would you like us to initiate a refund or reshipping?"},
+          {type:'actions',buttons:['Request Refund','Request Reshipping','Speak to Agent']},
+        ]);
+        setPhase('response');
+      });
+    } else {
+      showTyping(()=>{
+        addBots([
+          {type:'text',text:"I completely understand your situation, dear customer. We do apologize for the inconvenience caused.\n\nYour frustration is completely understandable, and we genuinely care about your experience. Could you please tell us briefly what seems to be the issue?"},
+          {type:'issue_list',text:'Please select the button below that best describes your problem:',issues:ISSUES},
+        ]);
+        setPhase('response');
+      });
+    }
+  }
+
+  function handleAction(btn){
+    addUser(btn);
+    if(btn==='Speak to Agent'||btn.toLowerCase().includes('agent')){doEscalate();}
+    else{showTyping(()=>{addBots([{type:'text',text:"Thank you! We've initiated your request. You'll receive a confirmation within 24–48 hours.\n\nIs there anything else I can help you with?"}]);});}
+  }
+
+  function doEscalate(){
+    showTyping(()=>{
+      addBots([{type:'text',text:"Please accept our heartfelt apologies for the inconvenience. Your concerns are important to us, and we'll strive to help you."}]);
+      showTyping(()=>{
+        addBots([{type:'escalation',text:"Need a person? Tap below to reach a live specialist. Everything you've already shared in this chat will be attached so they have full context—you won't need to repeat yourself."}]);
+        setPhase('escalated');
+      },1400);
+    },1200);
+  }
+
+  function connectLiveAgent(){
+    if(agentSessionStarted)return;
+    setAgentSessionStarted(true);
+    addUser('Chat with our agent');
+    const base=Date.now();
+    showTyping(()=>{
+      addBots([{type:'text',text:"Kindly bear with me for a moment as I transfer you to a live agent who is better equipped to assist you."}]);
+      window.setTimeout(()=>{
+        setMsgs(p=>[...p,{id:base+1,role:'system',type:'system_line',text:'Chat started'}]);
+      },520);
+      window.setTimeout(()=>{
+        setMsgs(p=>[...p,{id:base+2,role:'bot',type:'text',text:"I've synced your earlier messages to the human agent—photos, order details, and everything above—so they can continue from here without missing anything."}]);
+      },1100);
+      window.setTimeout(()=>{
+        setLiveAgent(LIVE_AGENT);
+        setMsgs(p=>[...p,{id:base+3,role:'system',type:'agent_joined',name:LIVE_AGENT.name,initial:LIVE_AGENT.initial}]);
+      },1750);
+      window.setTimeout(()=>{
+        setMsgs(p=>[...p,{id:base+4,role:'bot',type:'text',fromLiveAgent:true,agentInitial:LIVE_AGENT.initial,text:"Hi! I'm Christopher. I've read what you shared—how can I help you from here?"}]);
+        setPhase('live_agent');
+      },2350);
+    },1100);
+  }
+
+  function chipSelectOrder(){setShowPicker(true);}
+  /** Opens order list — “recent orders” in UI copy */
+  function chipRecentOrders(){
+    addUser('Recent orders');
+    setShowPicker(true);
+  }
+  /** Cart path — prototype has no live cart; guide user to Cart tab + chat */
+  function chipCartItems(){
+    addUser('Cart items');
+    showTyping(()=>{
+      addBots([{type:'text',text:"Go to Cart from the bottom tab, select the product you need help with, then return here—or type the product name in the box below and we'll match it."}]);
+    });
+  }
+
+  function handleSend(){
+    const t=inputVal.trim();if(!t)return;
+    setInputVal('');
+    addUser(t);
+    const low=t.toLowerCase();
+    if(phase==='live_agent'){
+      showTyping(()=>{addBots([{type:'text',fromLiveAgent:true,agentInitial:liveAgent?.initial||'C',text:"Thanks for your message—I'm reviewing it now and will reply shortly."}]);});
+      return;
+    }
+    if(low.includes('human')||low.includes('agent')||low.includes('real person')){doEscalate();}
+    else{showTyping(()=>{addBots([{type:'text',text:"Thank you for reaching out! I'm here to help. Could you please share more details so I can assist you better?"}]);});}
+  }
+
+  function renderMsg(msg){
+    if(msg.type==='timestamp'){
+      return(
+        <div key={msg.id} style={{textAlign:'center',margin:'6px 0 10px'}}>
+          <span style={{fontSize:12,color:'#AAAAAA'}}>{msg.text}</span>
+        </div>
+      );
+    }
+    if(msg.type==='system_line'){
+      return(
+        <div key={msg.id} className="fade-up" style={{textAlign:'center',margin:'10px 0 8px'}}>
+          <span style={{fontSize:12,color:'#8E8E93',fontWeight:500}}>{msg.text}</span>
+        </div>
+      );
+    }
+    if(msg.type==='agent_joined'){
+      return(
+        <div key={msg.id} className="fade-up" style={{display:'flex',alignItems:'center',justifyContent:'center',gap:10,margin:'12px 0 10px',padding:'0 16px'}}>
+          <div style={{
+            width:28,height:28,borderRadius:'50%',background:P.orange,
+            display:'flex',alignItems:'center',justifyContent:'center',
+            color:'#fff',fontSize:13,fontWeight:700,flexShrink:0,
+          }}>{msg.initial||(msg.name&&msg.name[0])||'?'}</div>
+          <span style={{fontSize:13,color:'#8E8E93',lineHeight:1.35,textAlign:'center'}}>
+            <span style={{fontWeight:600,color:'#111'}}>{msg.name}</span>
+            {' '}joined the chat
+          </span>
+        </div>
+      );
+    }
+    if(msg.type==='chat_order'){
+      const o=msg.order;
+      const st=orderStatusStyles(o.status||'Delivered');
+      return(
+        <div key={msg.id} className="fade-up" style={{marginBottom:10}}>
+          <div style={{background:'#FAFAFA',borderRadius:12,padding:'12px 14px',border:`1px solid ${P.borderMuted}`}}>
+            <span style={{display:'inline-block',background:st.bg,color:st.color,padding:'4px 8px',borderRadius:6,marginBottom:8,...TY.meta,fontWeight:700,fontSize:11}}>{o.status||'Delivered'}</span>
+            <p style={{...TY.meta,color:P.textGray,marginBottom:8}}>{o.items} item · {o.price}</p>
+            <ProductImg src={o.img} size={62}/>
+            <p style={{...TY.meta,color:'#AAA',marginTop:8,lineHeight:'1.35'}}>{o.id}</p>
+          </div>
+        </div>
+      );
+    }
+    if(msg.role==='user'){
+      return(
+        <div key={msg.id} className="fade-up" style={{display:'flex',justifyContent:'flex-end',marginBottom:10,paddingLeft:70}}>
+          <div style={{background:P.userBubble,borderRadius:'16px 16px 3px 16px',padding:'10px 14px',fontSize:14.5,color:'#111',lineHeight:1.5,maxWidth:'85%'}}>
+            {msg.text}
+          </div>
+        </div>
+      );
+    }
+    if(msg.type==='text'){
+      if(msg.fromLiveAgent){
+        const letter=msg.agentInitial||'C';
+        return(
+          <div key={msg.id} className="fade-up" style={{display:'flex',gap:8,marginBottom:10,paddingRight:40}}>
+            <div style={{
+              width:38,height:38,borderRadius:'50%',background:P.orange,flexShrink:0,
+              display:'flex',alignItems:'center',justifyContent:'center',
+              color:'#fff',fontSize:16,fontWeight:700,
+            }}>{letter}</div>
+            <div style={{background:'#fff',borderRadius:'3px 16px 16px 16px',padding:'10px 14px',fontSize:14,color:'#111',lineHeight:1.55,flex:1,boxShadow:'0 1px 3px rgba(0,0,0,0.07)'}}>
+              {msg.text.split('\n').map((line,j,arr)=>(
+                <React.Fragment key={j}>{line}{j<arr.length-1&&<br/>}</React.Fragment>
+              ))}
+            </div>
+          </div>
+        );
+      }
+      const parts=msg.text.split(/(__Privacy Policy__)/);
+      return(
+        <div key={msg.id} className="fade-up" style={{display:'flex',gap:8,marginBottom:10,paddingRight:40}}>
+          <TemuAvatar size={38}/>
+          <div style={{background:'#fff',borderRadius:'3px 16px 16px 16px',padding:'10px 14px',fontSize:14,color:'#111',lineHeight:1.55,flex:1,boxShadow:'0 1px 3px rgba(0,0,0,0.07)'}}>
+            {parts.map((part,i)=>
+              part==='__Privacy Policy__'
+                ?<a key={i} href="#" onClick={e=>e.preventDefault()} style={{color:'#1A73E8',textDecoration:'underline'}}> Privacy Policy </a>
+                :part.split('\n').map((line,j,arr)=>(
+                  <React.Fragment key={j}>
+                    {line.includes('http')?<a href="#" onClick={e=>e.preventDefault()} style={{color:P.orange}}>{line}</a>:line}
+                    {j<arr.length-1&&<br/>}
+                  </React.Fragment>
+                ))
+            )}
+          </div>
+        </div>
+      );
+    }
+    if(msg.type==='issue_list'){
+      return(
+        <div key={msg.id} className="fade-up" style={{display:'flex',gap:8,marginBottom:10,paddingRight:10}}>
+          <TemuAvatar size={38}/>
+          <div style={{background:'#fff',borderRadius:'3px 16px 16px 16px',fontSize:14,color:'#111',flex:1,boxShadow:'0 1px 3px rgba(0,0,0,0.07)',overflow:'hidden'}}>
+            <p style={{padding:'12px 14px 10px',lineHeight:1.5}}>{msg.text}</p>
+            {msg.issues.map((issue,i)=>(
+              <button type="button" key={i} onClick={()=>handleIssue(issue)} style={{
+                width:'100%',background:'none',border:'none',cursor:'pointer',
+                borderTop:`1px solid #F0F0F0`,
+                padding:'13px 14px',
+                display:'flex',alignItems:'flex-start',justifyContent:'space-between',
+                textAlign:'left',
+                ...TY.body,color:P.text,lineHeight:'1.4',gap:8,
+              }}>
+                <span>• {issue}</span>
+                <IOSIcon name="chevron-forward-outline" color="#AAA" size={18} style={{flexShrink:0,marginTop:2}}/>
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    if(msg.type==='actions'){
+      return(
+        <div key={msg.id} className="fade-up" style={{display:'flex',gap:8,marginBottom:10,paddingLeft:46,paddingRight:10}}>
+          <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
+            {msg.buttons.map((btn,i)=>(
+              <button type="button" key={i} onClick={()=>handleAction(btn)} style={{
+                border:`1.5px solid ${btn.includes('Agent')?P.orange:'#DDD'}`,
+                background:btn.includes('Agent')?'#FFF3E0':'#fff',
+                color:btn.includes('Agent')?P.orange:'#111',
+                borderRadius:20,padding:'8px 16px',
+                fontSize:13.5,fontWeight:500,cursor:'pointer',
+              }}>{btn}</button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    if(msg.type==='delivery_confirmation'){
+      const o=msg.order;
+      return(
+        <div key={msg.id} className="fade-up" style={{display:'flex',gap:8,marginBottom:10,paddingRight:10}}>
+          <TemuAvatar size={38}/>
+          <div style={{background:'#fff',borderRadius:'3px 16px 16px 16px',padding:'12px 14px',fontSize:14,color:'#111',lineHeight:1.55,flex:1,boxShadow:'0 1px 3px rgba(0,0,0,0.07)'}}>
+            <p style={{marginBottom:12,lineHeight:1.55}}>{msg.text}</p>
+            {/* Embedded order sub-card */}
+            <div style={{border:`1px solid ${P.borderMuted}`,borderRadius:10,padding:'10px 12px',marginBottom:10,background:P.bgPage}}>
+              {(()=>{
+                const st=orderStatusStyles(o.status||'Delivered');
+                return(
+                  <>
+                    <span style={{display:'inline-block',background:st.bg,color:st.color,padding:'3px 8px',borderRadius:6,...TY.meta,fontWeight:700,fontSize:11,marginBottom:6}}>{o.status||'Delivered'}</span>
+                  </>
+                );
+              })()}
+              <p style={{...TY.meta,color:P.textGray,marginBottom:8}}>{o.items} item · {o.price}</p>
+              <ProductImg src={o.img} size={56}/>
+              <p style={{...TY.meta,color:'#AAA',marginTop:7,lineHeight:'1.35'}}>{o.id}</p>
+            </div>
+            <button type="button" onClick={()=>handleIssue('Return/Refund')} style={{
+              width:'100%',background:'#fff',border:`2px solid ${P.orange}`,
+              borderRadius:24,padding:'12px 0',
+              ...TY.body,fontWeight:600,color:P.orange,cursor:'pointer',...TY.btnTouch,minHeight:44,
+            }}>Request a Return/Refund</button>
+          </div>
+        </div>
+      );
+    }
+    if(msg.type==='followup_actions'){
+      return(
+        <div key={msg.id} className="fade-up" style={{display:'flex',gap:8,marginBottom:10,paddingRight:10}}>
+          <TemuAvatar size={38}/>
+          <div style={{background:'#fff',borderRadius:'3px 16px 16px 16px',padding:'12px 14px',fontSize:14,color:'#111',lineHeight:1.55,flex:1,boxShadow:'0 1px 3px rgba(0,0,0,0.07)'}}>
+            <p style={{marginBottom:12,lineHeight:1.55}}>{msg.text}</p>
+            {msg.buttons.map((btn,i)=>(
+              <button type="button" key={i} onClick={()=>{
+                if(btn==='I have other questions'){addUser(btn);showTyping(()=>{addBots([{type:'issue_list',text:'Could you tell us what issue you are facing?',issues:ISSUES}]);setPhase('issue_list');});}
+                else{addUser(btn);}
+              }} style={{
+                width:'100%',background:'#fff',border:'1.5px solid #111',
+                borderRadius:24,padding:'11px 0',
+                fontSize:15,fontWeight:500,color:'#111',cursor:'pointer',
+                marginBottom:i<msg.buttons.length-1?8:0,
+                display:'block',
+              }}>{btn}</button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    if(msg.type==='escalation'){
+      return(
+        <div key={msg.id} className="fade-up" style={{display:'flex',gap:8,marginBottom:10,paddingRight:10}}>
+          <TemuAvatar size={38}/>
+          <div style={{background:'#fff',borderRadius:'3px 16px 16px 16px',padding:'12px 14px',fontSize:14,color:'#111',lineHeight:1.55,flex:1,boxShadow:'0 1px 3px rgba(0,0,0,0.07)'}}>
+            <p style={{marginBottom:agentSessionStarted?10:14}}>{msg.text}</p>
+            {!agentSessionStarted&&(
+            <div style={{borderTop:'1px solid #F0F0F0',paddingTop:12,textAlign:'center'}}>
+              <p style={{fontSize:12.5,color:'#757575',marginBottom:10}}>Still need assistance?</p>
+              <button type="button" onClick={connectLiveAgent} style={{
+                ...TY.btnTouch,width:'100%',maxWidth:320,minHeight:44,
+                background:P.agentCtaBg,border:`1px solid ${P.agentCtaBorder}`,borderRadius:8,
+                padding:'10px 16px',cursor:'pointer',
+                display:'flex',alignItems:'center',justifyContent:'center',gap:8,margin:'0 auto',
+              }}>
+                <IOSIcon name="happy-outline" color={P.orange} size={20}/>
+                <span style={{...TY.body,fontWeight:700,color:P.orange}}>Chat with our agent</span>
+                <IOSIcon name="chevron-forward-outline" color={P.orange} size={18}/>
+              </button>
+            </div>
+            )}
+            {agentSessionStarted&&!liveAgent&&(
+              <p style={{fontSize:12,color:'#8E8E93',marginTop:4,textAlign:'center'}}>Connecting you to a specialist…</p>
+            )}
+          </div>
+        </div>
+      );
+    }
+    return null;
+  }
+
+  return(
+    <div style={{width:'100%',height:'100%',display:'flex',flexDirection:'column',background:'#F5F5F5'}}>
+      <StatusBar showTemu={true}/>
+      {/* Nav */}
+      <div style={{background:'#fff',padding:'4px 16px 10px',display:'flex',alignItems:'center',justifyContent:'space-between',borderBottom:'1px solid #EFEFEF'}}>
+        <button type="button" onClick={onBack} style={{...TY.btnTouch,background:'none',border:'none',cursor:'pointer',padding:'4px 10px 4px 0'}}>
+          <IOSIcon name="chevron-back-outline" color={P.text} size={26}/>
+        </button>
+        <div style={{textAlign:'center'}}>
+          <p style={{fontSize:17,fontWeight:600,color:'#111',lineHeight:1.2}}>{liveAgent?liveAgent.name:'Temu'}</p>
+          <p style={{fontSize:12,color:'#888'}}>Customer service</p>
+        </div>
+        <button type="button" style={{...TY.btnTouch,display:'flex',alignItems:'center',gap:4,background:'none',border:'none',cursor:'pointer',fontSize:13,fontWeight:500,color:'#111'}}>
+          <IOSIcon name="star-outline" color={P.text} size={20}/>
+          Rate
+        </button>
+      </div>
+
+      {/* Messages */}
+      <div ref={scrollRef} style={{flex:1,overflowY:'auto',padding:'12px 12px'}}>
+        {msgs.map(renderMsg)}
+        {typing&&(
+          <div className="fade-up" style={{display:'flex',gap:8,marginBottom:10}}>
+            <TemuAvatar size={38}/>
+            <div style={{background:'#fff',borderRadius:'3px 16px 16px 16px',padding:'13px 16px',boxShadow:'0 1px 3px rgba(0,0,0,0.07)',display:'flex',alignItems:'center',gap:4}}>
+              {[0,1,2].map(i=><div key={i} className={['td1','td2','td3'][i]} style={{width:7,height:7,borderRadius:'50%',background:'#CCC'}}/>)}
+            </div>
+          </div>
+        )}
+        <div style={{height:6}}/>
+      </div>
+
+      {/* Composer: chips + input share one bar (unified #F2 fills, one top border) */}
+      <div style={{flexShrink:0,background:P.bg,borderTop:`1px solid ${P.borderMuted}`,padding:'10px 12px 30px'}}>
+        <div style={{display:'flex',gap:10,overflowX:'auto',paddingBottom:10,scrollbarWidth:'none',WebkitOverflowScrolling:'touch'}}>
+          {!showPostOrderChips&&(
+            <button type="button" onClick={chipSelectOrder} style={{
+              flexShrink:0,...TY.btnTouch,height:44,padding:'0 16px',
+              borderRadius:999,border:'none',
+              background:'#F2F2F2',cursor:'pointer',
+              ...TY.body,fontWeight:600,color:P.text,whiteSpace:'nowrap',
+            }}><span style={{display:'inline-flex',alignItems:'center',gap:8}}>Select Order<IOSIcon name="cube-outline" color={P.text} size={20}/></span></button>
+          )}
+          {showPostOrderChips&&<>
+            <button type="button" onClick={chipRecentOrders} style={{
+              flexShrink:0,...TY.btnTouch,height:44,padding:'0 16px',
+              borderRadius:999,border:'none',
+              background:'#F2F2F2',cursor:'pointer',
+              ...TY.body,fontWeight:600,color:P.text,whiteSpace:'nowrap',
+            }}><span style={{display:'inline-flex',alignItems:'center',gap:8}}>Recent orders<IOSIcon name="receipt-outline" color={P.text} size={20}/></span></button>
+            <button type="button" onClick={chipCartItems} style={{
+              flexShrink:0,...TY.btnTouch,height:44,padding:'0 16px',
+              borderRadius:999,border:'none',
+              background:'#F2F2F2',cursor:'pointer',
+              ...TY.body,fontWeight:600,color:P.text,whiteSpace:'nowrap',
+            }}><span style={{display:'inline-flex',alignItems:'center',gap:8}}>Cart items<IOSIcon name="cart-outline" color={P.text} size={20}/></span></button>
+          </>}
+        </div>
+        <div style={{display:'flex',alignItems:'center',gap:8}}>
+          <button type="button" onClick={()=>setShowAttachSheet(true)} aria-label="Add attachment" title="Add attachment" style={{
+            ...TY.btnTouch,width:44,height:44,borderRadius:'50%',flexShrink:0,
+            background:'#F2F2F2',border:'none',
+            cursor:'pointer',marginBottom:0,
+          }}>
+            <IOSIcon name="add-outline" color={P.text} size={26}/>
+          </button>
+          {/* Text input */}
+          <div style={{flex:1,display:'flex',alignItems:'center',background:'#F2F2F2',borderRadius:22,padding:'9px 12px',gap:6}}>
+            <input
+              ref={inputRef}
+              value={inputVal}
+              onChange={e=>setInputVal(e.target.value)}
+              onKeyDown={e=>e.key==='Enter'&&handleSend()}
+              placeholder="Type your inquiry here..."
+              style={{flex:1,border:'none',background:'transparent',fontSize:14,color:'#111',outline:'none'}}
+            />
+            {inputVal.trim()&&(
+              <button type="button" onClick={handleSend} style={{...TY.btnTouch,width:32,height:32,borderRadius:'50%',background:P.orange,border:'none',cursor:'pointer',flexShrink:0}}>
+                <IOSIcon name="paper-plane-outline" color="#fff" size={17}/>
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {showAttachSheet&&(
+        <AttachmentSheet
+          onClose={()=>setShowAttachSheet(false)}
+          onPhotos={()=>{setShowAttachSheet(false);setShowPhotoPicker(true);}}
+          onCamera={()=>{setShowAttachSheet(false);showTyping(()=>{addBots([{type:'text',text:'Use your camera app to capture a clear photo of the packing slip or damage, then add it via Photos.'}]);});}}
+          onFiles={()=>{setShowAttachSheet(false);showTyping(()=>{addBots([{type:'text',text:'Choose Files to attach screenshots, receipts, or labels (PDF/JPG)—we\'ll keep them tied to your session.'}]);});}}
+        />
+      )}
+
+      {/* Order picker sheet */}
+      {showPicker&&(
+        <OrderPickerSheet onSelect={o=>{
+          setShowPicker(false);
+          runOrderFlow(o,msgs);
+        }} onClose={()=>setShowPicker(false)}/>
+      )}
+
+      {/* Photo picker sheet */}
+      {showPhotoPicker&&(
+        <PhotoPickerSheet onClose={()=>setShowPhotoPicker(false)}/>
+      )}
+    </div>
+  );
+}
+
+/* ─── ATTACHMENT "+" BOTTOM SHEET ─────────────── */
+function AttachmentSheet({onClose,onCamera,onPhotos,onFiles}){
+  function Row({icon,title,subtitle,onClick}){
+    return(
+      <button type="button" onClick={()=>{onClick&&onClick();}} style={{
+        width:'100%',display:'flex',alignItems:'center',gap:14,
+        padding:'14px 16px',border:'none',borderBottom:`1px solid ${P.borderMuted}`,
+        background:'#fff',cursor:'pointer',textAlign:'left',
+        ...TY.btnTouch,minHeight:56,justifyContent:'flex-start',
+      }}>
+        <div style={{
+          ...TY.btnTouch,width:40,height:40,borderRadius:10,flexShrink:0,
+          background:P.bgPage,display:'flex',alignItems:'center',justifyContent:'center',
+        }}>{icon}</div>
+        <div style={{flex:1}}>
+          <p style={{...TY.body,fontWeight:600,color:P.text,lineHeight:'1.3'}}>{title}</p>
+          <p style={{...TY.meta,color:P.textGray,marginTop:2,lineHeight:'1.3'}}>{subtitle}</p>
+        </div>
+      </button>
+    );
+  }
+  return(
+    <div className="fade-in-sheet" style={{position:'absolute',inset:0,zIndex:110}}>
+      <button type="button" aria-label="Close" onClick={onClose} style={{
+        position:'absolute',inset:0,background:'rgba(0,0,0,0.45)',
+        border:'none',cursor:'pointer',padding:0,margin:0,
+      }}/>
+      <div style={{
+        position:'absolute',bottom:0,left:0,right:0,
+        background:'#fff',borderRadius:'18px 18px 0 0',
+        maxHeight:'56%',display:'flex',flexDirection:'column',
+        overflow:'hidden',animation:'sheetUp 0.28s cubic-bezier(0.25,0.46,0.45,0.94)',
+      }}>
+        <div style={{width:36,height:5,background:'#D8D8D8',borderRadius:3,margin:'10px auto 8px'}}/>
+        <p style={{...TY.header,fontSize:17,textAlign:'center',marginBottom:4}}>Attach</p>
+        <p style={{...TY.meta,color:P.textGray,textAlign:'center',marginBottom:6}}>Add photos or documents</p>
+        <div style={{overflowY:'auto',flex:1}}>
+          <Row
+            icon={<IOSIcon name="camera-outline" color={P.text} size={26}/>}
+            title="Camera"
+            subtitle="Take a new photo now"
+            onClick={onCamera}
+          />
+          <Row
+            icon={<IOSIcon name="images-outline" color={P.text} size={26}/>}
+            title="Photos"
+            subtitle="Pick from your library"
+            onClick={onPhotos}
+          />
+          <Row
+            icon={<IOSIcon name="folder-open-outline" color={P.text} size={26}/>}
+            title="Files"
+            subtitle="Screenshots & PDFs"
+            onClick={onFiles}
+          />
+        </div>
+        <div style={{padding:'10px 16px 34px'}}>
+          <button type="button" onClick={onClose} style={{
+            width:'100%',border:`1px solid ${P.border}`,borderRadius:12,...TY.btnTouch,minHeight:48,
+            background:'#fff',cursor:'pointer',...TY.body,fontWeight:600,color:P.text,
+          }}>Cancel</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── ORDER PICKER SHEET (iOS-style; aligns with Figma node 3:5 OrderPickerSheet) ─ */
+function OrderPickerSheet({onSelect,onClose,flow}){
+  const[search,setSearch]=useState('');
+  const[pulseId,setPulseId]=useState(null);
+  const filtered=ORDERS.filter(o=>!search||o.name.toLowerCase().includes(search.toLowerCase())||o.id.includes(search));
+
+  const header=flow==='return'
+    ?{title:'Return & refund',subtitle:'Choose an order to continue'}
+    :flow==='delivery'
+    ?{title:'Delivery',subtitle:'Choose an order for tracking & shipping'}
+    :{title:'Please select your order',subtitle:null};
+
+  function pick(order){
+    if(pulseId)return;
+    setPulseId(order.id);
+    window.setTimeout(()=>{
+      setPulseId(null);
+      onSelect(order);
+    },220);
+  }
+
+  return(
+    <div style={{position:'absolute',inset:0,zIndex:100}}>
+      <button type="button" aria-label="Close" onClick={onClose} style={{
+        position:'absolute',inset:0,background:'rgba(0,0,0,0.42)',
+        backdropFilter:'blur(10px)',WebkitBackdropFilter:'blur(10px)',
+        border:'none',cursor:'pointer',
+      }}/>
+      <div style={{
+        position:'absolute',bottom:0,left:0,right:0,
+        background:'#F2F2F7',
+        borderRadius:'14px 14px 0 0',
+        maxHeight:'78vh',
+        display:'flex',
+        flexDirection:'column',
+        paddingBottom:28,
+        animation:'sheetUp 0.28s cubic-bezier(0.25,0.46,0.45,0.94)',
+        boxShadow:'0 -4px 24px rgba(0,0,0,0.12)',
+      }}>
+        {/* Grabber + chrome */}
+        <div style={{padding:'10px 0 6px',display:'flex',justifyContent:'center'}}>
+          <div style={{width:36,height:5,borderRadius:3,background:'#C7C7CC'}}/>
+        </div>
+        <div style={{position:'relative',padding:'0 16px 12px'}}>
+          <button type="button" onClick={onClose} style={{...TY.btnTouch,position:'absolute',right:4,top:-4,background:'none',border:'none',cursor:'pointer',padding:8}}>
+            <IOSIcon name="close-outline" color="#8E8E93" size={26}/>
+          </button>
+          <p style={{fontSize:17,fontWeight:600,color:'#000',textAlign:'center',padding:'0 44px',lineHeight:'1.25'}}>{header.title}</p>
+          {header.subtitle&&(
+            <p style={{...TY.meta,color:'#8E8E93',textAlign:'center',marginTop:6,lineHeight:'1.35',padding:'0 24px'}}>{header.subtitle}</p>
+          )}
+        </div>
+
+        {/* Search — Figma: #f2f2f2 pill */}
+        <div style={{padding:'0 16px 12px'}}>
+          <div style={{
+            display:'flex',alignItems:'center',gap:8,
+            background:'#FFF',borderRadius:12,
+            padding:'10px 14px',
+            minHeight:40,
+            border:'1px solid rgba(0,0,0,0.06)',
+            boxShadow:'0 1px 0 rgba(255,255,255,0.8) inset',
+          }}>
+            <IOSIcon name="search-outline" color="#8E8E93" size={18}/>
+            <input
+              value={search}
+              onChange={e=>setSearch(e.target.value)}
+              placeholder="Item name / Order ID / Tracking No."
+              style={{flex:1,border:'none',background:'transparent',...TY.body,outline:'none',color:P.text}}
+            />
+          </div>
+        </div>
+
+        {/* Grouped list */}
+        <div style={{overflowY:'auto',flex:1,padding:'0 12px 8px'}}>
+          <p style={{...TY.meta,color:'#8E8E93',textAlign:'center',marginBottom:10,lineHeight:'1.4'}}>Tap a card to open chat with this order</p>
+          {filtered.map((order,idx)=>{
+            const imgs=Array.isArray(order.img)?order.img:[order.img];
+            return(
+            <button key={order.id} type="button" onClick={()=>pick(order)} style={{
+              position:'relative',
+              width:'100%',
+              marginBottom:10,
+              padding:0,
+              background:pulseId===order.id?'rgba(0,0,0,0.02)':'#FFFFFF',
+              cursor:pulseId?'wait':'pointer',
+              textAlign:'left',
+              border:`1px solid ${P.borderMuted}`,
+              borderRadius:14,
+              boxShadow:'0 1px 2px rgba(0,0,0,0.04)',
+              overflow:'hidden',
+              display:'block',
+            }}>
+              {pulseId===order.id&&(
+                <div className="fade-in-sheet" style={{
+                  pointerEvents:'none',
+                  position:'absolute',inset:0,zIndex:2,
+                  background:'rgba(0,169,1,0.08)',
+                  display:'flex',alignItems:'center',justifyContent:'center',
+                }}>
+                  <div style={{
+                    ...TY.btnTouch,width:52,height:52,borderRadius:'50%',background:P.greenBadge,
+                    display:'flex',alignItems:'center',justifyContent:'center',
+                  }}>
+                    <IOSIcon name="checkmark-sharp" color="#fff" size={26}/>
+                  </div>
+                </div>
+              )}
+              <div style={{padding:'14px 14px 14px'}}>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:8,marginBottom:8}}>
+                  <div style={{display:'flex',alignItems:'center',gap:8,minWidth:0}}>
+                    {(()=>{
+                      const st=orderStatusStyles(order.status);
+                      return(
+                        <span style={{...TY.meta,fontWeight:700,fontSize:11,color:st.color,background:st.bg,padding:'4px 8px',borderRadius:6}}>{order.status}</span>
+                      );
+                    })()}
+                  </div>
+                  <div style={{display:'flex',alignItems:'center',gap:4,flexShrink:0}}>
+                    <span style={{...TY.meta,color:'#8E8E93'}}>{order.date}</span>
+                    <IOSIcon name="chevron-forward-outline" color="#C7C7CC" size={18}/>
+                  </div>
+                </div>
+                <p style={{...TY.meta,color:'#8E8E93',marginBottom:10,lineHeight:'1.35',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{order.id}</p>
+                <div style={{display:'flex',gap:12}}>
+                  <ProductImg src={imgs} size={60} radius={8}/>
+                  {idx===1&&imgs.length>=3&&<>
+                    <ProductImg src={imgs[1]} size={60} radius={8}/>
+                    <ProductImg src={imgs[2]} size={60} radius={8}/>
+                  </>}
+                  <div style={{flex:1,minWidth:0}}>
+                    <p style={{...TY.body,fontWeight:600,color:P.text,lineHeight:'1.35',display:'-webkit-box',WebkitLineClamp:2,WebkitBoxOrient:'vertical',overflow:'hidden'}}>{order.name}</p>
+                    <p style={{...TY.meta,color:'#8E8E93',marginTop:6,lineHeight:'1.35'}}>{order.items} item · {order.price}</p>
+                  </div>
+                </div>
+              </div>
+            </button>
+            );
+          })}
+
+          {/* Can't find order section */}
+          <div style={{
+            background:'#E5E5EA',
+            borderRadius:12,
+            padding:'14px 12px 10px',
+            marginTop:6,
+          }}>
+            <p style={{textAlign:'center',fontSize:14,color:'#111',fontWeight:500,marginBottom:12}}>Can't find your order?</p>
+            {/* Try signing in row */}
+            <div style={{
+              border:`1.5px solid ${P.orange}`,borderRadius:8,
+              padding:'13px 14px',marginBottom:8,background:'#fff',
+              display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer',
+            }}>
+              <span style={{fontSize:14,color:'#111'}}>Try signing in with another account</span>
+              <div style={{display:'flex',alignItems:'center',gap:4}}>
+                {/* Google */}
+                <svg width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                {/* Apple */}
+                <svg width="14" height="16" viewBox="0 0 24 28" fill="#111"><path d="M20.94 19.5c-.5 1.1-1.04 2.1-1.65 3.02-.87 1.24-1.58 2.1-2.13 2.57-.85.78-1.76 1.18-2.74 1.2-.7 0-1.55-.2-2.52-.61-.98-.4-1.88-.6-2.7-.6-.86 0-1.78.2-2.78.6-.99.41-1.79.62-2.4.64-1 .04-1.93-.37-2.8-1.24-.6-.52-1.34-1.42-2.22-2.7C.1 21.04-.38 19.4-.38 17.7c0-1.88.4-3.5 1.22-4.86.64-1.08 1.5-1.94 2.57-2.56 1.07-.63 2.23-.95 3.47-.97.7 0 1.63.22 2.8.65 1.17.43 1.92.65 2.25.65.24 0 1.07-.26 2.47-.77 1.32-.48 2.43-.68 3.35-.6 2.47.2 4.33 1.17 5.56 2.92-2.21 1.34-3.3 3.22-3.27 5.63.02 1.88.7 3.44 2.02 4.68.6.57 1.27 1.01 2.01 1.32-.16.47-.33.92-.53 1.36zM16.5.49c0 1.47-.54 2.84-1.6 4.1-1.28 1.5-2.84 2.37-4.52 2.23-.02-.18-.03-.36-.03-.55 0-1.42.62-2.93 1.7-4.17.54-.62 1.23-1.13 2.06-1.54.83-.4 1.62-.62 2.35-.66.02.2.04.4.04.59z"/></svg>
+                {/* Facebook */}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.95.93-1.95 1.88v2.27h3.32l-.53 3.49h-2.79V24C19.61 23.1 24 18.1 24 12.07z"/></svg>
+                {/* X/Twitter */}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#111"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.26 5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                <IOSIcon name="chevron-forward-outline" color="#AAA" size={16}/>
+              </div>
+            </div>
+            {/* Self-service row */}
+            <div style={{
+              border:`1.5px solid ${P.orange}`,borderRadius:8,
+              padding:'13px 14px',background:'#fff',
+              display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer',
+            }}>
+              <span style={{fontSize:14,color:'#111'}}>Self-service to find order</span>
+              <IOSIcon name="chevron-forward-outline" color="#AAA" size={16}/>
+            </div>
+            <div style={{height:30}}/>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── PHOTO PICKER SHEET ──────────────────────── */
+function PhotoPickerSheet({onClose}){
+  const[activeTab,setActiveTab]=useState('photos');
+  const photos=[
+    {color:'#8BA8C4',emoji:'🌅'},{color:'#C4A882',emoji:'🍜'},{color:'#A8C48B',emoji:'🌿'},
+    {color:'#C48BA8',emoji:'🌸'},{color:'#8BC4C0',emoji:'🌊'},{color:'#C4C48B',emoji:'☀️'},
+    {color:'#B48BC4',emoji:'🦋'},{color:'#C4B48B',emoji:'🏠'},{color:'#8BC4A8',emoji:'🌲'},
+  ];
+  return(
+    <div style={{position:'absolute',inset:0,zIndex:100,display:'flex',flexDirection:'column',justifyContent:'flex-end'}}>
+      <div onClick={onClose} style={{position:'absolute',inset:0,background:'rgba(0,0,0,0.25)'}}/>
+      <div style={{
+        position:'relative',
+        background:'#fff',
+        borderRadius:'20px 20px 0 0',
+        animation:'sheetUp 0.32s cubic-bezier(0.25,0.46,0.45,0.94)',
+        zIndex:1,
+      }}>
+        <p style={{textAlign:'center',fontSize:13,color:'#888',padding:'14px 0 10px'}}>Select up to 9 items.</p>
+
+        {/* Tab row */}
+        <div style={{display:'flex',alignItems:'center',padding:'0 14px 12px',gap:8}}>
+          <button type="button" onClick={onClose} style={{
+            width:36,height:36,borderRadius:'50%',
+            background:'#E5E5E5',border:'none',cursor:'pointer',
+            display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,
+          }}>
+            <IOSIcon name="close-outline" color="#111" size={20}/>
+          </button>
+          <button type="button" onClick={()=>setActiveTab('photos')} style={{
+            flex:1,height:36,borderRadius:18,border:'none',cursor:'pointer',
+            background:activeTab==='photos'?'#111':'transparent',
+            color:activeTab==='photos'?'#fff':'#111',
+            fontSize:15,fontWeight:500,
+          }}>Photos</button>
+          <button type="button" onClick={()=>setActiveTab('collections')} style={{
+            flex:1,height:36,borderRadius:18,border:'none',cursor:'pointer',
+            background:activeTab==='collections'?'#111':'transparent',
+            color:activeTab==='collections'?'#fff':'#111',
+            fontSize:15,fontWeight:500,
+          }}>Collections</button>
+          <button type="button" style={{
+            width:36,height:36,borderRadius:'50%',
+            background:'#E5E5E5',border:'none',cursor:'pointer',
+            display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,
+          }}>
+            <IOSIcon name="checkmark-done-outline" color="#666" size={22}/>
+          </button>
+        </div>
+
+        {/* Photo grid */}
+        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:2,padding:'0 0 2px'}}>
+          {photos.map((p,i)=>(
+            <div key={i} style={{
+              aspectRatio:'1',background:p.color,
+              display:'flex',alignItems:'center',justifyContent:'center',
+              fontSize:32,cursor:'pointer',
+            }}>{p.emoji}</div>
+          ))}
+        </div>
+
+        {/* iOS permission notice */}
+        <div style={{
+          margin:'10px 12px 16px',
+          background:'#fff',
+          border:'1px solid #E8E8E8',
+          borderRadius:14,
+          padding:'14px 14px 12px',
+          position:'relative',
+          boxShadow:'0 2px 8px rgba(0,0,0,0.06)',
+        }}>
+          <button type="button" onClick={onClose} style={{
+            position:'absolute',top:10,right:10,
+            background:'none',border:'none',cursor:'pointer',padding:4,
+          }}>
+            <IOSIcon name="close-outline" color="#AAA" size={22}/>
+          </button>
+          <div style={{display:'flex',alignItems:'flex-start',gap:12}}>
+            <IOSIcon name="images-outline" color="#007AFF" size={42}/>
+            <div style={{flex:1,paddingRight:20}}>
+              <p style={{fontSize:14.5,fontWeight:700,color:'#111',marginBottom:4}}>Private Access to Photos</p>
+              <p style={{fontSize:12.5,color:'#888',lineHeight:1.45,marginBottom:8}}>Your photo library is shown here, but "Temu" can only access the items you select.</p>
+              <a href="#" onClick={e=>e.preventDefault()} style={{fontSize:13,color:'#1A73E8',textDecoration:'none',fontWeight:500}}>Learn More...</a>
+            </div>
+          </div>
+        </div>
+
+        <div style={{height:20}}/>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════
+   ROOT
+══════════════════════════════════════════════ */
+/** Figma / HTML export: ?figma=support|search|sheet-return|sheet-delivery|sheet-order|chat|chat-flow|chat-picker|chat-attach|chat-photo */
+function readFigmaQuery(){
+  if(typeof window==='undefined'){
+    return{screen:'support',order:null,supportSheet:null,chatExport:null};
+  }
+  const m=new URLSearchParams(window.location.search).get('figma');
+  if(!m){return{screen:'support',order:null,supportSheet:null,chatExport:null};}
+  if(m==='search'){
+    return{screen:'search',order:null,supportSheet:null,chatExport:null};
+  }
+  if(m==='sheet-return'){
+    return{screen:'support',order:null,supportSheet:{open:true,flow:'return'},chatExport:null};
+  }
+  if(m==='sheet-delivery'){
+    return{screen:'support',order:null,supportSheet:{open:true,flow:'delivery'},chatExport:null};
+  }
+  if(m==='sheet-order'){
+    return{screen:'support',order:null,supportSheet:{open:true,flow:null},chatExport:null};
+  }
+  if(m==='chat'||m==='chat-flow'||m==='chat-picker'||m==='chat-attach'||m==='chat-photo'){
+    const order=m==='chat-picker'?null:ORDERS[0];
+    const chatExport={
+      forcePicker:m==='chat-picker',
+      attachSheet:m==='chat-attach',
+      photoPicker:m==='chat-photo',
+      skipBootstrap:m!=='chat-flow',
+    };
+    return{screen:'chat',order,supportSheet:null,chatExport};
+  }
+  return{screen:'support',order:null,supportSheet:null,chatExport:null};
+}
+
+function App(){
+  const fq=React.useMemo(()=>readFigmaQuery(),[]);
+  const[screen,setScreen]=useState(fq.screen);
+  const[selectedOrder,setSelectedOrder]=useState(fq.order);
+
+  function goChat(order){setSelectedOrder(order);setScreen('chat');}
+  function goBack(){
+    if(screen==='chat')setScreen('support');
+    else if(screen==='search')setScreen('support');
+    setSelectedOrder(null);
+  }
+
+  return(
+    <div style={{minHeight:'100vh',background:'#1C1C1E',display:'flex',alignItems:'center',justifyContent:'center'}}>
+      <div className="phone">
+        {/* Dynamic island */}
+        <div style={{position:'absolute',top:13,left:'50%',transform:'translateX(-50%)',width:126,height:37,background:'#000',borderRadius:20,zIndex:200,pointerEvents:'none'}}/>
+        {/* Home indicator */}
+        <div style={{position:'absolute',bottom:8,left:'50%',transform:'translateX(-50%)',width:134,height:5,borderRadius:3,background:'rgba(0,0,0,0.22)',zIndex:200,pointerEvents:'none'}}/>
+        <div className="screen">
+          {screen==='support'&&(
+            <div style={{position:'absolute',inset:0,animation:'slideInL 0.3s ease'}}>
+              <SupportPage
+                initialSheet={fq.supportSheet}
+                onOrderSelect={goChat}
+                onSearchFocus={()=>setScreen('search')}
+                onContactUs={()=>goChat(null)}
+              />
+            </div>
+          )}
+          {screen==='search'&&(
+            <div style={{position:'absolute',inset:0,animation:'slideInR 0.3s ease'}}>
+              <SearchPage onBack={goBack} onOrderSelect={goChat}/>
+            </div>
+          )}
+          {screen==='chat'&&(
+            <div style={{position:'absolute',inset:0,animation:'slideInR 0.3s ease'}}>
+              <ChatPage order={selectedOrder} onBack={goBack} exportUi={fq.chatExport}/>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+<div id="root"></div>
+</body>
+</html>
