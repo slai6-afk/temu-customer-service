@@ -17,7 +17,40 @@ body{
   align-items:center;
   justify-content:center;
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif;
+  transition:background 0.4s ease;
 }
+/* ── Phone wrapper (holds buttons + shadow) ── */
+.phone-wrapper{
+  position:relative;
+  flex-shrink:0;
+}
+/* ── Side buttons ── */
+.btn-side{
+  position:absolute;
+  background:linear-gradient(90deg,#2a2a2a,#1a1a1a);
+  border-radius:2px;
+  z-index:10;
+}
+/* Left: silent switch + volume up + volume down */
+.btn-silent{width:4px;height:28px;left:-13px;top:142px;}
+.btn-vol-up{width:4px;height:56px;left:-13px;top:200px;}
+.btn-vol-down{width:4px;height:56px;left:-13px;top:270px;}
+/* Right: power */
+.btn-power{width:4px;height:76px;right:-13px;top:220px;}
+/* ── Elliptical shadow beneath phone ── */
+.phone-shadow{
+  position:absolute;
+  bottom:-38px;
+  left:50%;
+  transform:translateX(-50%);
+  width:320px;
+  height:40px;
+  background:radial-gradient(ellipse at center,rgba(0,0,0,0.45) 0%,rgba(0,0,0,0.12) 50%,transparent 80%);
+  border-radius:50%;
+  pointer-events:none;
+  filter:blur(6px);
+}
+/* ── Phone body ── */
 .phone{
   width:390px;
   height:844px;
@@ -31,6 +64,25 @@ body{
     0 0 0 11px #4a4a4a;
   flex-shrink:0;
 }
+/* ── BG toggle button ── */
+.bg-toggle{
+  position:fixed;
+  bottom:24px;
+  right:24px;
+  display:flex;
+  gap:8px;
+  z-index:9999;
+}
+.bg-toggle button{
+  width:36px;height:36px;
+  border-radius:50%;
+  border:2.5px solid rgba(255,255,255,0.5);
+  cursor:pointer;
+  transition:transform 0.2s,border-color 0.2s;
+  box-shadow:0 2px 8px rgba(0,0,0,0.3);
+}
+.bg-toggle button:hover{transform:scale(1.15);}
+.bg-toggle button.active{border-color:#fff;transform:scale(1.15);}
 .screen{
   width:100%;height:100%;
   overflow:hidden;
@@ -1478,35 +1530,66 @@ function App(){
     setSelectedOrder(null);
   }
 
+  const BG_OPTIONS=[
+    {id:'dark',color:'#1C1C1E',label:'Dark'},
+    {id:'orange',color:'#FF6D00',label:'Orange'},
+    {id:'white',color:'#FFFFFF',label:'White'},
+  ];
+  const[bg,setBg]=useState(BG_OPTIONS[0]);
+
   return(
-    <div style={{minHeight:'100vh',background:'#1C1C1E',display:'flex',alignItems:'center',justifyContent:'center'}}>
-      <div className="phone">
-        {/* Dynamic island */}
-        <div style={{position:'absolute',top:13,left:'50%',transform:'translateX(-50%)',width:126,height:37,background:'#000',borderRadius:20,zIndex:200,pointerEvents:'none'}}/>
-        {/* Home indicator */}
-        <div style={{position:'absolute',bottom:8,left:'50%',transform:'translateX(-50%)',width:134,height:5,borderRadius:3,background:'rgba(0,0,0,0.22)',zIndex:200,pointerEvents:'none'}}/>
-        <div className="screen">
-          {screen==='support'&&(
-            <div style={{position:'absolute',inset:0,animation:'slideInL 0.3s ease'}}>
-              <SupportPage
-                initialSheet={fq.supportSheet}
-                onOrderSelect={goChat}
-                onSearchFocus={()=>setScreen('search')}
-                onContactUs={()=>goChat(null)}
-              />
-            </div>
-          )}
-          {screen==='search'&&(
-            <div style={{position:'absolute',inset:0,animation:'slideInR 0.3s ease'}}>
-              <SearchPage onBack={goBack} onOrderSelect={goChat}/>
-            </div>
-          )}
-          {screen==='chat'&&(
-            <div style={{position:'absolute',inset:0,animation:'slideInR 0.3s ease'}}>
-              <ChatPage order={selectedOrder} onBack={goBack} exportUi={fq.chatExport}/>
-            </div>
-          )}
+    <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',paddingBottom:48}}>
+      <div className="phone-wrapper">
+        {/* Side buttons */}
+        <div className="btn-side btn-silent"/>
+        <div className="btn-side btn-vol-up"/>
+        <div className="btn-side btn-vol-down"/>
+        <div className="btn-side btn-power"/>
+
+        <div className="phone">
+          {/* Dynamic island */}
+          <div style={{position:'absolute',top:13,left:'50%',transform:'translateX(-50%)',width:126,height:37,background:'#000',borderRadius:20,zIndex:200,pointerEvents:'none'}}/>
+          {/* Home indicator */}
+          <div style={{position:'absolute',bottom:8,left:'50%',transform:'translateX(-50%)',width:134,height:5,borderRadius:3,background:'rgba(0,0,0,0.22)',zIndex:200,pointerEvents:'none'}}/>
+          <div className="screen">
+            {screen==='support'&&(
+              <div style={{position:'absolute',inset:0,animation:'slideInL 0.3s ease'}}>
+                <SupportPage
+                  initialSheet={fq.supportSheet}
+                  onOrderSelect={goChat}
+                  onSearchFocus={()=>setScreen('search')}
+                  onContactUs={()=>goChat(null)}
+                />
+              </div>
+            )}
+            {screen==='search'&&(
+              <div style={{position:'absolute',inset:0,animation:'slideInR 0.3s ease'}}>
+                <SearchPage onBack={goBack} onOrderSelect={goChat}/>
+              </div>
+            )}
+            {screen==='chat'&&(
+              <div style={{position:'absolute',inset:0,animation:'slideInR 0.3s ease'}}>
+                <ChatPage order={selectedOrder} onBack={goBack} exportUi={fq.chatExport}/>
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* Elliptical shadow */}
+        <div className="phone-shadow"/>
+      </div>
+
+      {/* Background color toggle */}
+      <div className="bg-toggle">
+        {BG_OPTIONS.map(o=>(
+          <button
+            key={o.id}
+            className={bg.id===o.id?'active':''}
+            style={{background:o.color}}
+            title={o.label}
+            onClick={()=>{setBg(o);document.body.style.background=o.color;}}
+          />
+        ))}
       </div>
     </div>
   );
